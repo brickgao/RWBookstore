@@ -185,4 +185,73 @@ module.exports = function(app) {
     });
   });
 
+  app.get('/manage/:id', function(req, res) {
+    if(!req.session.user) {
+      req.flash('error', '请先登录');
+      return res.redirect('/login');
+    }
+    if(req.session.isadmin === 0) {
+      req.flash('error', '你没有相应的权限');
+      return res.redirect('/');
+    }
+    var book = new require('../models/book.js'),
+        bookInfo = new book();
+    bookInfo.getAllBook(function(err, row) {
+      if(err) {
+        req.flash('error', err);
+        return res.redirect('/');
+      }
+      res.render('manage', {
+        title: '管理图书',
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString(),
+        isadmin: req.session.isadmin,
+        user: req.session.user,
+        row: row[parseInt(req.params.id)]
+      });
+    });
+  });
+
+  app.post('/manage/:id', function(req, res) {
+    if(!req.session.user) {
+      req.flash('error', '请先登录');
+      return res.redirect('/login');
+    }
+    if(req.session.isadmin === 0) {
+      req.flash('error', '你没有相应的权限');
+      return res.redirect('/');
+    }
+  });
+
+  app.get('/manage/del/:id', function(req, res) {
+    if(!req.session.user) {
+      req.flash('error', '请先登录');
+      return res.redirect('/login');
+    }
+    if(req.session.isadmin === 0) {
+      req.flash('error', '你没有相应的权限');
+      return res.redirect('/');
+    }
+    var book = new require('../models/book.js'),
+        bookInfo = new book();
+    bookInfo.getAllBook(function(err, row) {
+      if(err) {
+        req.flash('error', err);
+        return res.redirect('/');
+      }
+      var bookname = row[parseInt(req.params.id)].bookname;
+      bookInfo.delBook(bookname, function(err) {
+        if(err) {
+          console.log(err);
+          req.flash('error', err);
+          return res.redirect('/manage');
+        }
+        else {
+          req.flash('success', '删除成功');
+          return res.redirect('/manage');
+        }
+      });
+    });
+  });
+
 }

@@ -64,7 +64,7 @@ book.prototype.editBook = function editBook(bookname, bookinfo, price, callback)
 
 book.prototype.delBook = function delBook(bookname, callback) {
   var db = new sqlite3.Database(settings.db);
-  db.run("DELETE * FROM book WHERE bookname = ?", bookname, function(err) {
+  db.run("DELETE FROM book WHERE bookname = ?", bookname, function(err) {
     db.close();
     if(err)
       return callback(err);

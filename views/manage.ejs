@@ -12,14 +12,17 @@
             <th>图书名称</th>
             <th>图书价格</th>
             <th>详情</th>
+            <th>删除</th>
           </tr>
           <% for(var i = 0; i< row.length; ++ i) { %>
           <tr>
-            <% tmp = "/manage/" + i.toString() %>
+            <% s1 = "/manage/" + i.toString() %>
+            <% s2 = "/manage/del/" + i.toString() %>
             <td><%= i %></td>
             <td><%= row[i].bookname %></td>
             <td><%= row[i].price %></td>
-            <td><a href=<%= tmp %>>详情</a></td>
+            <td><a href=<%= s1 %>>详情</a></td>
+            <td><a href=<%= s2 %>>删除</a></td>
           </tr>
           <% } %>
         </thead>
