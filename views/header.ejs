@@ -31,6 +31,9 @@
             <li><a href="/">主页</a></li>
             <li><a href="#">图书列表</a></li>
             <li><a href="#">购物车</a></li>
+            <% if (isadmin) { %>
+            <li><a href="#">管理图书</a></li>
+            <% } %>
           </ul>
           <% if (user) { %>
             <ul class="nav navbar-nav navbar-right">

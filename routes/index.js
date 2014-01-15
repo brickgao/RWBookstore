@@ -5,6 +5,7 @@ module.exports = function(app) {
       title: '主页',
       success: req.flash('success').toString(),
       error: req.flash('error').toString(),
+      isadmin: req.session.isadmin,
       user: req.session.user
     });
   });
@@ -18,6 +19,7 @@ module.exports = function(app) {
       title: '注册',
       success: req.flash('success').toString(),
       error: req.flash('error').toString(),
+      isadmin: req.session.isadmin,
       user: req.session.user
     });
   });
@@ -56,6 +58,7 @@ module.exports = function(app) {
       title: '登录',
       success: req.flash('success').toString(),
       error: req.flash('error').toString(),
+      isadmin: req.session.isadmin,
       user: req.session.user
     });
   });
@@ -73,21 +76,29 @@ module.exports = function(app) {
     }
     var user = require('../models/user.js');
     var userInfo = new user(username, passwd, '', 0);
-    userInfo.check(function(err) {
+    userInfo.check(function(err, flag, isadmin) {
       if(err) {
         req.flash('error', err);
         return res.redirect('/login');
       }
       else {
-        req.session.user = username;
-        req.flash('success', '欢迎回来，' + username);
-        return res.redirect('/');
+        if(!flag) {
+          req.flash('error', '密码错误或者用户名不存在');
+          return res.redirect('/login');
+        }
+        else {
+          req.session.user = username;
+          req.session.isadmin = isadmin;
+          req.flash('success', '欢迎回来，' + username);
+          return res.redirect('/');
+        }
       }
     });
   });
 
   app.get('/logout', function(req, res) {
     req.session.user = null;
+    req.session.isadmin = null;
     req.flash('success', '你已经退出');
     res.redirect('/');
   });

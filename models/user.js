@@ -56,10 +56,10 @@ user.prototype.check = function check(callback) {
     else {
       db.close();
       if(row.passwd === passwd) {
-        return callback(null, true);
+        return callback(null, true, row.isadmin);
       }
       else {
-        return callback(null, false);
+        return callback(null, false, row.isadmin);
       }
     }
   })
