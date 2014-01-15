@@ -17,7 +17,7 @@ user.prototype.reg = function reg(callback) {
       passwd = md5.update(this.passwd).digest('hex'),
       isadmin = this.isadmin,
       db = new sqlite3.Database(settings.db);
-  db.get("SELECT * FROM user where username = ?", username, function(err, row) {
+  db.get("SELECT * FROM user WHERE username = ?", username, function(err, row) {
     if(err) {
       db.close();
       return callback(err);
