@@ -124,7 +124,8 @@ module.exports = function(app) {
         success: req.flash('success').toString(),
         error: req.flash('error').toString(),
         isadmin: req.session.isadmin,
-        user: req.session.user
+        user: req.session.user,
+        row: row
       });
     });
   });
@@ -140,18 +141,12 @@ module.exports = function(app) {
     }
     var book = new require('../models/book.js'),
         bookInfo = new book();
-    bookInfo.getAllBook(function(err, row) {
-      if(err) {
-        req.flash('error', err);
-        return res.redirect('/');
-      }
-      res.render('add', {
-        title: '增加图书',
-        success: req.flash('success').toString(),
-        error: req.flash('error').toString(),
-        isadmin: req.session.isadmin,
-        user: req.session.user
-      });
+    res.render('add', {
+      title: '增加图书',
+      success: req.flash('success').toString(),
+      error: req.flash('error').toString(),
+      isadmin: req.session.isadmin,
+      user: req.session.user
     });
   });
 
