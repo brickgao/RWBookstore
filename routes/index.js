@@ -22,6 +22,28 @@ module.exports = function(app) {
     });
   });
 
-  app.post('/req', function(req, res) {
+  app.post('/reg', function(req, res) {
+    var username = req.body.username,
+        passwd = req.body.passwd;
+    if(username === '') {
+      req.flash('error', '请填写用户名');
+      return res.redirect('/reg');
+    }
+    if(passwd === '') {
+      req.flash('error', '请填写密码');
+      return res.redirect('/reg');
+    }
+    var user = require('../models/user.js');
+    var userInfo = new user(username, passwd, '', 0);
+    userInfo.reg(function(err) {
+      if(err) {
+        req.flash('error', err);
+        return res.redirect('/reg');
+      }
+      else {
+        req.flash('success', '注册成功');
+        return res.redirect('/');
+      }
+    });
   });
 }
