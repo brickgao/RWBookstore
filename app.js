@@ -10,6 +10,9 @@ var flash = require('connect-flash');
 var sqlite3 = require('sqlite3').verbose();
 var http = require('http');
 var path = require('path');
+var settings = require('./settings');
+
+var db = new sqlite3.Database(settings.db);
 
 var app = express();
 
@@ -19,7 +22,7 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.cookieParser('keyboard cat'));
 app.use(express.session({ 
-  secret: 'guangtou',
+  secret: settings.cookieSecret,
   cookie: { maxAge: 60000 }
 }));
 app.use(express.favicon());
