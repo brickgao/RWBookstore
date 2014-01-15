@@ -277,4 +277,50 @@ module.exports = function(app) {
     });
   });
 
+  app.get('/list', function(req, res) {
+    if(!req.session.user) {
+      req.flash('error', '请先登录');
+      return res.redirect('/login');
+    }
+    var book = new require('../models/book.js'),
+        bookInfo = new book();
+    bookInfo.getAllBook(function(err, row) {
+      if(err) {
+        req.flash('error', err);
+        return res.redirect('/');
+      }
+      res.render('list', {
+        title: '图书列表',
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString(),
+        isadmin: req.session.isadmin,
+        user: req.session.user,
+        row: row
+      });
+    });
+  });
+  
+  app.get('/list/:id', function(req, res) {
+    if(!req.session.user) {
+      req.flash('error', '请先登录');
+      return res.redirect('/login');
+    }
+    var book = new require('../models/book.js'),
+        bookInfo = new book();
+    bookInfo.getAllBook(function(err, row) {
+      if(err) {
+        req.flash('error', err);
+        return res.redirect('/list');
+      }
+      res.render('bookItem', {
+        title: '图书详情' + row[parseInt(req.params.id)].bookname,
+        success: req.flash('success').toString(),
+        error: req.flash('error').toString(),
+        isadmin: req.session.isadmin,
+        user: req.session.user,
+        row: row[parseInt(req.params.id)]
+      });
+    });
+  });
+
 }
