@@ -1,5 +1,8 @@
 module.exports = function(app) {
     app.get('/', function(req, res) {
-        return res.send('test');
+      res.render('index', {
+        title: '主页',
+        user: req.session.user
+      });
     });
 }
