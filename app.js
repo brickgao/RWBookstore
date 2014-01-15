@@ -23,7 +23,7 @@ app.set('view engine', 'ejs');
 app.use(express.cookieParser('keyboard cat'));
 app.use(express.session({ 
   secret: settings.cookieSecret,
-  cookie: { maxAge: 60000 }
+  cookie: { maxAge: 600000 }
 }));
 app.use(flash());
 app.use(express.favicon());

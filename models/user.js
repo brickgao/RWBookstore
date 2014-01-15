@@ -1,6 +1,5 @@
 var settings = require('../settings'),
-    sqlite3 = require('sqlite3').verbose(),
-    db = new sqlite3.Database(settings.db);
+    sqlite3 = require('sqlite3').verbose();
 
 function user(username, passwd, passwdchanged, isadmin) {
   this.username = username;
@@ -16,24 +15,25 @@ user.prototype.reg = function reg(callback) {
       crypto = require('crypto'),
       md5 = crypto.createHash('md5'),
       passwd = md5.update(this.passwd).digest('hex'),
-      isadmin = this.isadmin;
+      isadmin = this.isadmin,
+      db = new sqlite3.Database(settings.db);
   db.get("SELECT * FROM user where username = ?", username, function(err, row) {
     if(err) {
-      //db.close();
+      db.close();
       return callback(err);
     }
     else if(row) {
-      //db.close();
+      db.close();
       return callback('该用户名已经注册');
     }
     else {
       db.run("INSERT INTO user(username, passwd, isadmin) values(?, ?, ?)", username, passwd, isadmin, function(err) {
         if(err) {
-          //db.close();
+          db.close();
           return callback(err);
         }
         else {
-          //db.close();
+          db.close();
           return callback(null);
         }
       })
@@ -46,14 +46,15 @@ user.prototype.check = function check(callback) {
       crypto = require('crypto'),
       md5 = crypto.createHash('md5'),
       passwd = md5.update(this.passwd).digest('hex'),
-      isadmin = this.isadmin;
+      isadmin = this.isadmin,
+      db = new sqlite3.Database(settings.db);
   db.get("SELECT * FROM user where username = ?", username, function(err, row) {
     if(err) {
-      //db.close();
+      db.close();
       return callback(err);
     }
     else {
-      //db.close();
+      db.close();
       if(row.passwd === passwd) {
         return callback(null, true);
       }
@@ -70,21 +71,22 @@ user.prototype.update = function update(callback) {
       md5 = crypto.createHash('md5'),
       passwd = md5.update(this.passwd).digest('hex'),
       isadmin = this.isadmin,
-      passwdchanged = md5.update(this.passwdchanged).digest('hex');
+      passwdchanged = md5.update(this.passwdchanged).digest('hex'),
+      db = new sqlite3.Database(settings.db);
   db.get("SELECT * FROM user WHERE username = ?", username, function(err, row) {
     if(err) {
-      //db.close();
+      db.close();
       return callback(err);
     }
     else {
       if(row.passwd === passwd) {
         db.run("UPDATE user SET passwd = ? WHERE username = ?", passwdchanged, username, function(err) {
           if(err) {
-            //db.close();
+            db.close();
             return callback(err);
           }
           else  {
-            //db.close();
+            db.close();
             return callback(null);
           }
         });
