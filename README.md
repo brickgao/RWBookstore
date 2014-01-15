@@ -1,4 +1,4 @@
-RWBookStore
+RWBookStore [![Build Status](https://travis-ci.org/brickgao/RWBookstore.png?branch=master)](https://travis-ci.org/brickgao/RWBookstore)
 ===========
 
 一个简单的网上书店。
