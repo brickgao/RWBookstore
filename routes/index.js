@@ -175,7 +175,6 @@ module.exports = function(app) {
     bookInfo.addBook(bookname, bookinfo, price, function(err) {
       if(err) {
         req.flash('error', err);
-        console.log(err);
         return res.redirect('/manage');
       }
       else {
@@ -201,7 +200,7 @@ module.exports = function(app) {
         req.flash('error', err);
         return res.redirect('/');
       }
-      res.render('manage', {
+      res.render('edit', {
         title: '管理图书',
         success: req.flash('success').toString(),
         error: req.flash('error').toString(),
@@ -221,6 +220,31 @@ module.exports = function(app) {
       req.flash('error', '你没有相应的权限');
       return res.redirect('/');
     }
+    var book = new require('../models/book.js'),
+        bookInfo = new book();
+    bookInfo.getAllBook(function(err, row) {
+      if(err) {
+        req.flash('error', err);
+        return res.redirect('/');
+      }
+      var bookname = row[parseInt(req.params.id)].bookname,
+          bookinfo = req.body.bookinfo,
+          price = req.body.price;
+      if(isNaN(price) || price === '') {
+        req.flash('error', '图书价格不合法');
+        return res.redirect('/manage/' + req.params.id);
+      }
+      bookInfo.editBook(bookname, bookinfo, price, function(err) {
+        if(err) {
+          req.flash('error', err);
+          return res.redirect('/manage');
+        }
+        else {
+          req.flash('success', '修改成功');
+          return res.redirect('/manage');
+        }
+      });
+    });
   });
 
   app.get('/manage/del/:id', function(req, res) {
@@ -242,7 +266,6 @@ module.exports = function(app) {
       var bookname = row[parseInt(req.params.id)].bookname;
       bookInfo.delBook(bookname, function(err) {
         if(err) {
-          console.log(err);
           req.flash('error', err);
           return res.redirect('/manage');
         }

@@ -51,7 +51,7 @@ book.prototype.editBook = function editBook(bookname, bookinfo, price, callback)
       return callback(err);
     }
     else if(row) {
-      db.run("UPDATE book SET bookinfo = ? AND price = ? WHERE bookname = ?", bookinfo, price, bookname, function(err) {
+      db.run("UPDATE book SET bookinfo = ?, price = ? WHERE bookname = ?", bookinfo, price, bookname, function(err) {
         db.close();
         if(err)
           return callback(err);
