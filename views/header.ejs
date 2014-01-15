@@ -39,6 +39,22 @@
         </div>
       </div>
     </div>
+
+    <hr>
+    
+    <% if (success) { %>
+      <div class = "alert alert-success">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <%= success %>
+      </div>
+    <% } %>
+    <% if (error) { %>
+      <div class = "alert alert-error">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <%= error %>
+      </div>
+    <% } %>
+    
           
             
   

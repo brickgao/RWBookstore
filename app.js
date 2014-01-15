@@ -25,6 +25,7 @@ app.use(express.session({
   secret: settings.cookieSecret,
   cookie: { maxAge: 60000 }
 }));
+app.use(flash());
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
