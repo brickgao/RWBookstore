@@ -5,6 +5,7 @@ var settings = require('../settings'),
 function user(username, passwd, isadmin) {
   this.username = username;
   this.passwd = passwd;
+  this.passwdchanged = passwdchanged;
   this.isadmin = isadmin;
 }
 
@@ -32,9 +33,65 @@ user.prototype.reg = function reg(callback) {
           return callback(err);
         }
         else {
+          db.close();
           return callback(null);
         }
       })
+    }
+  })
+}
+
+user.prototype.check = function check(callback) {
+  var username = this.username,
+      crypto = require('crypto'),
+      md5 = crypto.createHash('md5'),
+      passwd = md5.update(this.passwd).digest('hex'),
+      isadmin = this.isadmin;
+  db.get("SELECT * FROM user where username = ?", username, function(err, row) {
+    if(err) {
+      db.close();
+      return callback(err);
+    }
+    else {
+      db.close();
+      if(row.passwd === passwd) {
+        return callback(null, true);
+      }
+      else {
+        return callback(null, false);
+      }
+    }
+  })
+}
+
+user.prototype.update = function update(callback) {
+  var username = this.username,
+      crypto = require('crypto'),
+      md5 = crypto.createHash('md5'),
+      passwd = md5.update(this.passwd).digest('hex'),
+      isadmin = this.isadmin,
+      passwdchanged = this.passwdchanged;
+  db.get("SELECT * FROM user WHERE username = ?", username, function(err, row) {
+    if(err) {
+      db.close();
+      return callback(err);
+    }
+    else {
+      if(row.passwd === passwd) {
+        db.run("UPDATE user SET passwd = ? WHERE username = ?", passwdchanged, username, function(err) {
+          if(err) {
+            db.close();
+            return callback(err);
+          }
+          else  {
+            db.close();
+            return callback(null);
+          }
+        });
+      }
+      else {
+        return callback('原密码不正确');
+      }
     }
   })
 }
